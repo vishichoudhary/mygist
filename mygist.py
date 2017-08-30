@@ -1,11 +1,9 @@
 import requests
 import getpass
+import json
+from fetch_gist import fetch_gist as fg
 user_name=input("Enter user name ")
-passwd=getpass.getpass("Enter password ")
-url='https://api.github.com/users/'+user_name+'/gists'
-re=requests.get(url,auth=(user_name,passwd))
-if re.status_code==200:
-    print("Succesful")
-else:
-    print(re.status_code)
-    print("Unsuccessful")
+url='https://api.github.com/users/'+user_name+'/gists?per_page=30000'
+ob=fg(url)
+ob.fetch()
+

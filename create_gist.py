@@ -1,4 +1,4 @@
-import requests,json
+import requests,json,datetime,time
 import global_vars as gv
 class Create_gist:
     "Class for gist creation"
@@ -14,14 +14,19 @@ class Create_gist:
             self.public='false'
         self.file_name=input("Enter the file name with extension ")
         with open(self.file_name,'r') as myfile:
-            self.data=myfile.read().replace('\n','')
-        self.send_dict={"description":self.des,
-                "public":self.public,
+            self.fdata=myfile.read()
+        print(self.fdata)
+        self.info="try after a long time"
+        self.date=datetime.date.today()
+        self.c_time=time.strftime("%H:%M:%S")
+        self.send_dict="""{"description":"%s",
+                "public":"%s",
                 "files":{
-                    self.file_name:{
-                        "content":self.data
+                    "%s":{
+                        "content":"%s"
                         }
                     }
-                }
-        re=requests.post(self.url,headers=self.headers,files=self.send_dict)
+                }"""
+        self.send_dict=self.send_dict%(self.des,self.public,self.file_name,self.info)
+        re=requests.post('https://api.github.com/gists',headers=self.headers,data=json.dumps(self.send_dict))
         print(re.status_code)

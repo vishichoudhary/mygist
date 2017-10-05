@@ -7,6 +7,7 @@ class fetch_gist:
         self.headers=gv.headers
     def fetch_auth(self):
         req=requests.get(self.url,headers=self.headers)
+        #req=requests.get(self.url)
         res_ans=req.json()
         if req.status_code==200:
             print("Total no of public gists are "+str(len(res_ans)))
@@ -14,8 +15,11 @@ class fetch_gist:
                 l=list(res_ans[i]['files'].keys())
                 print(str(i+1)+" "+l[0])
                 new_dict={l[0]:res_ans[i]['files'][l[0]]['raw_url']}
+                id_temp={l[0]:res_ans[i]['id']}
+                print(id_temp)
                 gv.link_dict.update(new_dict)
                 gv.no_dict.update({str(i+1):l[0]})
+                gv.id_no.update(id_temp)
         else:
             print(req.status_code)
             print("unsuccessful")

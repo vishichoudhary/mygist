@@ -9,12 +9,13 @@ class Create_gist:
         self.des=input("Enter the description for gist ")
         self.public=input("Make this gist public (y/n) ")
         if self.public=='y' or self.public=='Y':
-            self.public='true'
+            self.public=True
         else:
-            self.public='false'
+            self.public=False
         self.file_name=input("Enter the file name with extension ")
         with open(self.file_name,"r") as myfile:
             self.info=myfile.read()
+        self.file_name = self.file_name.split('/')[-1]
         self.send_dict={"description":self.des,
                 "public":self.public,
                 "files":{
@@ -24,4 +25,4 @@ class Create_gist:
                     }
                 }
         re=requests.post('https://api.github.com/gists',auth=(self.user,self.passwd),data=json.dumps(self.send_dict))
-        print(re.status_code)
+        print("Gist id of new gist is ",re.json()['id'])

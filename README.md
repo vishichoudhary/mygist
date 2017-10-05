@@ -11,6 +11,7 @@
 # todo
 
 #
-- [ ] create gist
+- [x] create gist
 - [x] delete gist
 - [x] fetch gist
+- [ ] argument passing like python mygist -c file_name 

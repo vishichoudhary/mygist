@@ -1,4 +1,4 @@
-import requests,json,datetime,time,getpass
+import requests, json
 #import global_vars as gv
 
 class Gist:

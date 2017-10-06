@@ -26,10 +26,10 @@ args = parser.parse_args()
 
 if args.username is None:
 	args.username = input("Enter your github user name: ")
-	
+
 if args.password is None:
 	args.password = getpass.getpass("Enter your github password: ")
-	
+
 gists = Gist(args.username, args.password)
 
 if args.delete is not None:
@@ -37,29 +37,29 @@ if args.delete is not None:
 		print("Deleted succesfully")
 	else:
 		print("There was a problem deleting the gist")
-		
+
 elif args.list:
 	gists.list()  # It would be better to retrieve the gists data and make here the prints
-	
+
 else:  # Create as default action
 	if args.title is None:
 		args.title = input("Enter the description for the gist: ")
-		
+
 	if not args.public:
 		args.public = input("Make this gist public (y/n): ") in ("y", "Y")
-		
+
 	files = args.files.split(",") if args.files else ""
 	existing_files = list(filter(os.path.exists, files))
-	
+
 	if args.files is None or len(existing_files) == 0:
 		print("No existing files were specified")
 		alt_file = ""
-		
+
 		while len(existing_files) == 0:
 			alt_file = input("Enter the file names (separated with commas): ")
-			files = map(lambda s: s.strip(), alt_file.split(","))
-			existing_files = filter(os.path.exists, files)
-			
+			files = list(map(lambda s: s.strip(), alt_file.split(",")))
+			existing_files = list(filter(os.path.exists, files))
+
 			if len(existing_files) == 0:
 				print("No existing files were specified")
 			elif len(existing_files) != len(files):
@@ -69,15 +69,15 @@ else:  # Create as default action
 						print(f)
 				if input("Continue anyway? (y/n): ") not in ("y", "Y"):
 					existing_files = []
-						
-		 
+
+
 	file_pairs = []  # (name, content)
 	for file_path in existing_files:
 		with open(file_path, "r") as myfile:
 			file_pairs.append((os.path.basename(file_path), myfile.read()))
-				
+
 	gist_id = gists.create(args.title, file_pairs, args.public)
-	
+
 	if gist_id is not None:
 		print("Created succesfully. Gist ID: %s" % gist_id)
 	else:

@@ -9,7 +9,7 @@ parser.add_argument("-u", "--username", default = None, help="Username of the Gi
 parser.add_argument("-p", "--password", default = None, help="Password of the GitHub account")
 parser.add_argument("-c", "--create", action="store_true", help="To create a new gist")
 parser.add_argument("-t", "--title", default=None, help="Title of the new gist")
-parser.add_argument("-f", "--file", default=None, help="File name to use as content")
+parser.add_argument("-f", "--files", default=None, help="File names to use as content")
 parser.add_argument("-b", "--public", action="store_true", help="Specifies if the gist will be public")
 parser.add_argument("-d", "--delete", default = None, help="To delete an existing gist (by id)")
 parser.add_argument("-l", "--list", action = "store_true", help="List the previosly created gists")
@@ -48,19 +48,26 @@ else:  # Create as default action
 	if not args.public:
 		args.public = input("Make this gist public (y/n): ") in ("y", "Y")
 		
-	if not os.path.exists(args.file):
-		print("The specified file does not exist")
-			
-	while not os.path.exists(args.file):
-		args.file = input("Enter the file name with extension: ")
+	files = args.files.split(",") if args.files else ""
+	existing_files = filter(os.path.exists, files)
+	
+	if len(existing_files) == 0:
+		print("No existing files were specified")
+		alt_file = ""
 		
-		if not os.path.exists(args.file):
-			print("The specified file does not exist")
+		while not os.path.exists(alt_file):
+			alt_file = input("Enter the file name with extension: ")
+			
+			if not os.path.exists(alt_file):
+				print("The specified file does not exist")
+		existing_files = [alt_file]
 		 
-	with open(args.file,"r") as myfile:
-		args.file = ((args.file, myfile.read()),)
+	file_pairs = []  # (name, content)
+	for file_path in existing_files:
+		with open(file_path, "r") as myfile:
+			file_pairs.append((os.path.basename(file_path), myfile.read()))
 				
-	gist_id = gists.create(args.title, args.file, args.public)
+	gist_id = gists.create(args.title, file_pairs, args.public)
 	
 	if gist_id is not None:
 		print("Created succesfully. Gist ID: %s" % gist_id)

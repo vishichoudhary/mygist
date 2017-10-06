@@ -49,7 +49,7 @@ else:  # Create as default action
 		args.public = input("Make this gist public (y/n): ") in ("y", "Y")
 		
 	files = args.files.split(",") if args.files else ""
-	existing_files = filter(os.path.exists, files)
+	existing_files = list(filter(os.path.exists, files))
 	
 	if len(existing_files) == 0:
 		print("No existing files were specified")

@@ -1,4 +1,4 @@
-import requests, json
+import datetime, re, requests, json, time
 #import global_vars as gv
 
 class GistFile:
@@ -24,8 +24,15 @@ class Gist:
 		self.created_at = json_data["created_at"]
 		self.updated_at = json_data["updated_at"]
 		
-		self.files = []
+		# Store also the created and updated datetimes as timestamps
+		dt_pattern = r"([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z"
+		created_groups = map(int, re.match(dt_pattern, self.created_at).groups())
+		self.created_at_ts = int(time.mktime(datetime.datetime(*created_groups).timetuple()))
+		updated_groups = map(int, re.match(dt_pattern, self.updated_at).groups())
+		self.updated_at_ts = int(time.mktime(datetime.datetime(*updated_groups).timetuple()))
 		
+		self.files = []
+
 		for file_name in json_data["files"]:
 			self.files.append(GistFile(json_data["files"][file_name]))
 

@@ -49,16 +49,19 @@ class GistHandler:
 		self.user = user
 		self.passwd = passwd
 
-	def list(self, anonymous = False):
+	def list(self, anonymous = False, starred = False):
 		
 		if anonymous:
 			if self.user is None:
 				raise Exception("An username is required")
 			url='https://api.github.com/users/%s/gists' % self.user
 			req=requests.get(url)
+		elif starred:
+			url='https://api.github.com/gists/starred'
+			req=requests.get(url, auth = (self.user, self.passwd))
 		else:
 			url='https://api.github.com/users/%s/gists' % self.user
-			req=requests.get(url,auth=(self.user, self.passwd))
+			req=requests.get(url, auth = (self.user, self.passwd))
 
 		res_ans=req.json()
 

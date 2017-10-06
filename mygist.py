@@ -13,6 +13,7 @@ parser.add_argument("-f", "--files", default=None, help="File names to use as co
 parser.add_argument("-b", "--public", action="store_true", help="Specifies if the gist will be public")
 parser.add_argument("-r", "--remove", default = None, help="To delete an existing gist (by id)")
 parser.add_argument("-l", "--list", action = "store_true", help="List the gists of an user (with authentication)")
+parser.add_argument("-ls", "--list_starred", action = "store_true", help="List the starred gists of an user (with authentication)")
 parser.add_argument("-la", "--list_anonimously", action = "store_true", help="List the gists of an user (without authentication)")
 parser.add_argument("-i", "--info", default = None, help="Get detailed info of a gist (by id)")
 parser.add_argument("-s", "--star", default = None, help="Star an existing gist (by id)")
@@ -75,10 +76,10 @@ elif args.remove is not None:
 
 elif args.list:
 	gists.list()  # It would be better to retrieve the gists data and make here the prints
-	
+elif args.list_starred:
+	gists.list(starred = True)
 elif args.list_anonimously:
 	gists.list(anonymous = True)
-
 else:  # Create as default action
 	if args.description is None:
 		args.description = input("Enter the description for the gist: ")

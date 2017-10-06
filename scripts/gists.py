@@ -1,4 +1,4 @@
-import requests, json, pdb
+import requests, json
 #import global_vars as gv
 
 class GistFile:

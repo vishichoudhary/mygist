@@ -1,7 +1,35 @@
-import requests, json
+import requests, json, pdb
 #import global_vars as gv
 
+class GistFile:
+	def __init__(self, json_data):
+		self.filename = json_data["filename"]
+		self.content = json_data["content"]
+		self.language = json_data["language"]
+		self.size = json_data["size"]
+		self.type = json_data["type"]
+		self.truncated = json_data["truncated"]
+
 class Gist:
+	def __init__(self, json_data):
+		self.url = json_data["url"]
+		self.forks_url = json_data["forks_url"]
+		self.commits_url = json_data["commits_url"]
+		self.id = json_data["id"]
+		self.description = json_data["description"]
+		self.public = json_data["public"]
+		self.owner = json_data["owner"]["login"]
+		self.truncated = json_data["truncated"]
+		self.comments = json_data["comments"]
+		self.created_at = json_data["created_at"]
+		self.updated_at = json_data["updated_at"]
+		
+		self.files = []
+		
+		for file_name in json_data["files"]:
+			self.files.append(GistFile(json_data["files"][file_name]))
+
+class GistHandler:
 	"Class for gist creation"
 	def __init__(self, user = None, passwd = None):
 		self.user = user
@@ -24,6 +52,11 @@ class Gist:
 				print("Gist id is " + res_ans[i]['id'])
 		else:
 			raise Exception("Login failed.")
+			
+	def retrieve(self, gist_id):
+		self.url='https://api.github.com/gists/' + gist_id
+		req=requests.get(self.url, auth = (self.user,self.passwd))
+		return Gist(json.loads(req.text)) if req.status_code == 200 else None
 		
 	def create(self, description, files, public = True):
         
@@ -43,6 +76,5 @@ class Gist:
 	def delete(self, gist_id):
 		self.url='https://api.github.com/gists/' + gist_id
 		req=requests.delete(self.url, auth = (self.user,self.passwd))
-		#print(req.status_code)
 		return req.status_code == 204
 		

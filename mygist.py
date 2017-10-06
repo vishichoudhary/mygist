@@ -14,6 +14,8 @@ parser.add_argument("-b", "--public", action="store_true", help="Specifies if th
 parser.add_argument("-r", "--remove", default = None, help="To delete an existing gist (by id)")
 parser.add_argument("-l", "--list", action = "store_true", help="List the previosly created gists")
 parser.add_argument("-i", "--info", default = None, help="Get detailed info of a gist (by id)")
+parser.add_argument("-s", "--star", default = None, help="Star an existing gist (by id)")
+parser.add_argument("-n", "--unstar", default = None, help="Untar an existing gist (by id)")
 
 args = parser.parse_args()
 
@@ -34,7 +36,17 @@ if args.info is None:
 gists = GistHandler(args.username, args.password)
 
 
-if args.info is not None:
+if args.star is not None:
+	starred = gists.star(args.star)
+
+	if not starred:
+		raise Exception("Invalid gist ID")
+elif args.unstar is not None:
+	unstarred = gists.unstar(args.unstar)
+
+	if not unstarred:
+		raise Exception("Invalid gist ID")
+elif args.info is not None:
 	gist = gists.retrieve(args.info)
 
 	if gist is None:

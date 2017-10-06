@@ -1,4 +1,4 @@
-import requests, json
+import datetime, re, requests, json, time
 #import global_vars as gv
 
 class GistFile:
@@ -9,6 +9,7 @@ class GistFile:
 		self.size = json_data["size"]
 		self.type = json_data["type"]
 		self.truncated = json_data["truncated"]
+
 
 class Gist:
 	def __init__(self, json_data):
@@ -23,11 +24,19 @@ class Gist:
 		self.comments = json_data["comments"]
 		self.created_at = json_data["created_at"]
 		self.updated_at = json_data["updated_at"]
+		
+		# Store also the created and updated datetimes as timestamps
+		dt_pattern = r"([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z"
+		created_groups = map(int, re.match(dt_pattern, self.created_at).groups())
+		self.created_at_ts = int(time.mktime(datetime.datetime(*created_groups).timetuple()))
+		updated_groups = map(int, re.match(dt_pattern, self.updated_at).groups())
+		self.updated_at_ts = int(time.mktime(datetime.datetime(*updated_groups).timetuple()))
 
 		self.files = []
 
 		for file_name in json_data["files"]:
 			self.files.append(GistFile(json_data["files"][file_name]))
+
 
 class GistHandler:
 	"Class for gist creation"
@@ -35,6 +44,10 @@ class GistHandler:
 		self.user = user
 		self.passwd = passwd
 		self.gists_number = 0
+	
+	def auth(user, passwd):
+		self.user = user
+		self.passwd = passwd
 
 	def list(self):
 		url='https://api.github.com/users/'+self.user+'/gists'
@@ -78,4 +91,15 @@ class GistHandler:
 		self.url='https://api.github.com/gists/' + gist_id
 		req=requests.delete(self.url, auth = (self.user,self.passwd))
 		return req.status_code == 204
+		
+	def star(self, gist_id):
+		url = 'https://api.github.com/gists/%s/star' % gist_id
+		req = requests.put(url, auth = (self.user,self.passwd))
+		return req.status_code == 204
+
+	def unstar(self, gist_id):
+		url = 'https://api.github.com/gists/%s/star' % gist_id
+		req = requests.delete(url, auth = (self.user,self.passwd))
+		return req.status_code == 204
+
 

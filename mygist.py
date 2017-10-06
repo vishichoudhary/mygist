@@ -51,25 +51,16 @@ else:  # Create as default action
 	files = args.files.split(",") if args.files else ""
 	existing_files = list(filter(os.path.exists, files))
 	
-	if args.files is None or len(existing_files) == 0:
+	if len(existing_files) == 0:
 		print("No existing files were specified")
 		alt_file = ""
 		
-		while len(existing_files) == 0:
-			alt_file = input("Enter the file names (separated with commas): ")
-			files = map(lambda s: s.strip(), alt_file.split(","))
-			existing_files = filter(os.path.exists, files)
+		while not os.path.exists(alt_file):
+			alt_file = input("Enter the file name with extension: ")
 			
-			if len(existing_files) == 0:
-				print("No existing files were specified")
-			elif len(existing_files) != len(files):
-				print("Warning! The following files do not exist:")
-				for f in files:
-					if f not in existing_files:
-						print(f)
-				if input("Continue anyway? (y/n): ") not in ("y", "Y"):
-					existing_files = []
-						
+			if not os.path.exists(alt_file):
+				print("The specified file does not exist")
+		existing_files = [alt_file]
 		 
 	file_pairs = []  # (name, content)
 	for file_path in existing_files:

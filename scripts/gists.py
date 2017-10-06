@@ -1,5 +1,4 @@
 import requests, json
-#import global_vars as gv
 
 class Gist:
 	"Class for gist creation"

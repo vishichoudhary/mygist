@@ -2,7 +2,7 @@
 
 import argparse, getpass, os
 from builtins import input
-from gists import Gist
+from scripts.gists import Gist
 
 parser = argparse.ArgumentParser(description="Auxiliar script to handle migraines related data")
 parser.add_argument("-u", "--username", default = None, help="Username of the GitHub account")

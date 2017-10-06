@@ -64,8 +64,8 @@ elif args.list:
 	gists.list()  # It would be better to retrieve the gists data and make here the prints
 	
 else:  # Create as default action
-	if args.title is None:
-		args.title = input("Enter the description for the gist: ")
+	if args.description is None:
+		args.description = input("Enter the description for the gist: ")
 		
 	if not args.public:
 		args.public = input("Make this gist public (y/n): ") in ("y", "Y")
@@ -98,7 +98,7 @@ else:  # Create as default action
 		with open(file_path, "r") as myfile:
 			file_pairs.append((os.path.basename(file_path), myfile.read()))
 				
-	gist_id = gists.create(args.title, file_pairs, args.public)
+	gist_id = gists.create(args.description, file_pairs, args.public)
 	
 	if gist_id is not None:
 		print("Created succesfully. Gist ID: %s" % gist_id)

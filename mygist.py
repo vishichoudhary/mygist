@@ -24,12 +24,12 @@ args = parser.parse_args()
 # See the help: python mygist.py -h
 
 #print(args)
+if args.info is None:
+    if args.username is None:
+            args.username = input("Enter your github user name: ")
 
-if args.username is None:
-	args.username = input("Enter your github user name: ")
-
-if args.password is None:
-	args.password = getpass.getpass("Enter your github password: ")
+    if args.password is None:
+            args.password = getpass.getpass("Enter your github password: ")
 
 gists = GistHandler(args.username, args.password)
 

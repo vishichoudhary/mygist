@@ -55,7 +55,8 @@ class GistHandler:
 
 	def retrieve(self, gist_id):
 		self.url='https://api.github.com/gists/' + gist_id
-		req=requests.get(self.url, auth = (self.user,self.passwd))
+		#req=requests.get(self.url, auth = (self.user,self.passwd))
+		req=requests.get(self.url)
 		return Gist(json.loads(req.text)) if req.status_code == 200 else None
 
 	def create(self, description, files, public = True):

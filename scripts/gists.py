@@ -24,7 +24,7 @@ class Gist:
 		self.comments = json_data["comments"]
 		self.created_at = json_data["created_at"]
 		self.updated_at = json_data["updated_at"]
-		
+
 		# Store also the created and updated datetimes as timestamps
 		dt_pattern = r"([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})Z"
 		created_groups = map(int, re.match(dt_pattern, self.created_at).groups())
@@ -44,13 +44,13 @@ class GistHandler:
 		self.user = user
 		self.passwd = passwd
 		self.gists_number = 0
-	
+
 	def auth(user, passwd):
 		self.user = user
 		self.passwd = passwd
 
 	def list(self, anonymous = False, starred = False):
-		
+
 		if anonymous:
 			if self.user is None:
 				raise Exception("An username is required")
@@ -102,7 +102,7 @@ class GistHandler:
 		self.url='https://api.github.com/gists/' + gist_id
 		req=requests.delete(self.url, auth = (self.user,self.passwd))
 		return req.status_code == 204
-		
+
 	def star(self, gist_id):
 		url = 'https://api.github.com/gists/%s/star' % gist_id
 		req = requests.put(url, auth = (self.user,self.passwd))

@@ -119,5 +119,6 @@ else:  # Create as default action
 
 	if gist_id is not None:
 		print("Created succesfully. Gist ID: %s" % gist_id)
+		print("Sharing link is https://gist.github.com/"+args.username+"/"+gist_id)
 	else:
 		print("There was a problem creating the gist")
